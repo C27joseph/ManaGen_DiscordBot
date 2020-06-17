@@ -1,3 +1,4 @@
+.gitignore
 /private
 /guilds
-/_py_cache_
+/_pycache_
