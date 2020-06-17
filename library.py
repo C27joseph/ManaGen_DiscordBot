@@ -1,14 +1,16 @@
 from json import load, dump
-import os, sys
+import os
 import datetime
+
 
 def existKey(_key, _dict):
     try:
         if _key in list(_dict.keys()):
             return True
-    except:
+    except Exception:
         pass
     return False
+
 
 def handleArgs(content):
     args = []
@@ -22,7 +24,7 @@ def handleArgs(content):
         else:
             args.append(word)
     return args, message.rstrip()
-    
+
 
 def getCurrentTime():
     currentDT = datetime.datetime.now()
@@ -37,7 +39,7 @@ def handleExpression(args):
     expression = expression.strip().replace("  ", " ")
     return expression
 
-    
+
 class Json:
     def load(pathfile=""):
         try:
@@ -47,6 +49,7 @@ class Json:
         except IOError:
             print(f"cannot load {pathfile}")
             return False
+
     def loadWrite(pathfile="", default={}, encoding="utf-8"):
         try:
             with open(pathfile, "r", encoding=encoding) as f:
@@ -58,11 +61,12 @@ class Json:
                 cur_path += path+"/"
                 try:
                     os.mkdir(cur_path)
-                except:
+                except Exception:
                     pass
             with open(pathfile, 'w') as f:
-                dump(default, f, indent = 4, ensure_ascii = False)
+                dump(default, f, indent=4, ensure_ascii=False)
                 return default
+
     def write(pathfile="", default={}, encoding="utf-8"):
         try:
             cur_path = ""
@@ -70,10 +74,10 @@ class Json:
                 cur_path += path+"/"
                 try:
                     os.mkdir(cur_path)
-                except:
+                except Exception:
                     pass
             with open(pathfile, 'w') as f:
-                dump(default, f, indent = 4, ensure_ascii = False)
+                dump(default, f, indent=4, ensure_ascii=False)
                 return True
         except IOError:
             print(f"cannot write {pathfile}")

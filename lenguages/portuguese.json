@@ -1,1 +1,12 @@
-{}
+{
+    "DiceController":{
+        "r":{
+            "message":"<#author> rolou <#expression>, Total = <#total>",
+            "embed":""
+        },
+        "g":{
+            "roll":"<#author> rolou <#expression>, NH = <#total>, Totalzinho",
+            "embed":""
+        }
+    }
+}
