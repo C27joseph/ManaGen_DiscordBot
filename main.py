@@ -3,13 +3,30 @@ from library import *
 from classes.Config import *
 from classes.Guild import *
 
+class Context:
+    def __init__(self, prefix, message, client):
+        self.prefix = prefix
+        self.message = message
+        self.guild = message.guild
+        self.channel = message.channel
+        self.author = message.author
+        self.client = client
+    def setArgs(self, args, message=""):
+        self.args = args
+        self.message = message
+
 class Application:
 	def __init__(self):
-		self.token = Json.load(pathfile="token.json")
+		self.token = Json.loadWrite(pathfile='private/token.json')
 		self.server = "dev"
 		self.version = "0.001"
 		self.name = "ManaGens"
 		self.guilds = {}
+		self.prefixes = Json.loadWrite(pathfile='private/prefixes.json')
+	def getPrefix(self, key):
+		if not existKey(key, self.prefixes):
+			return '/'
+		return self.prefixes[key]
 	def getGuild(self, key):
 		if not existKey(key, self.guilds):
 			self.guilds[key] = Guild(key)
@@ -24,8 +41,12 @@ async def on_message(message):
 		return
 	if not message.guild:
 		return
-	gm = app.getGuild(str(message.id))
-	gm.message = message
+	gKey = str(message.guild.id)
+	prefix = app.getPrefix(gKey)
+	context = Context(prefix, message, client)
+	gm = app.getGuild(gKey)
+	await gm.run(context)
+ 
 	
 
 @client.event
