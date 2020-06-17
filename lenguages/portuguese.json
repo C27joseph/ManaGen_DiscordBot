@@ -5,7 +5,7 @@
             "embed":""
         },
         "g":{
-            "roll":"<#author> rolou <#expression>, NH = <#total>, Totalzinho",
+            "message":"<#author> rolou `<#gdice>`, NH = <#nh>\n >><#margin><< Margem de Sucesso\n<#expression>",
             "embed":""
         }
     }

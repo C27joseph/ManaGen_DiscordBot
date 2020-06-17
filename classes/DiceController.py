@@ -36,9 +36,25 @@ class DiceController:
                 total_expression.append(v)
                 args_message.append(v)
         total = " ".join(total_expression)
-        total = str(eval(total))
+        total = eval(total)
         args_message = " ".join(args_message)
         return total, args_message
+
+    def getGurpsInfo(self, nh, total):
+        margin = nh - total
+        if total <= 4:
+            result = "decisive"
+        elif total >= 17:
+            result = "critic"
+        elif margin >= 10:
+            result = "decisive"
+        elif margin <= -10:
+            result = "critic"
+        elif margin >= 0:
+            result = "success"
+        else:
+            result = "fail"
+        return margin, result
 
     def getMessage(self, message="", replaces=[]):
         for old, new in replaces:
@@ -46,13 +62,17 @@ class DiceController:
         return message
 
     async def g(self, context):
-        total, expression = self.getExpression(context.args)
+        nh, expression = self.getExpression(context.args)
+        dice = self.roll(3, 6)
+        margin, result = self.getGurpsInfo(nh, dice.total)
         replaces = [
             ("<#author>", context.author.mention),
             ("<#expression>", expression),
-            ("<#total>", total)
+            ("<#nh>", str(nh)),
+            ("<#gdice>", dice.message),
+            ("<#margin>", str(margin))
         ]
-        message = self.strings['r']['message']
+        message = self.strings['g']['message']
         message = self.getMessage(message, replaces)
         return await context.channel.send(message)
 
@@ -61,7 +81,7 @@ class DiceController:
         replaces = [
             ("<#author>", context.author.mention),
             ("<#expression>", expression),
-            ("<#total>", total)
+            ("<#total>", str(total))
         ]
         message = self.strings['r']['message']
         message = self.getMessage(message, replaces)
