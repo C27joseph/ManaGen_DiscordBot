@@ -12,9 +12,9 @@ class Context:
         self.author = message.author
         self.client = client
 
-    def setArgs(self, args, message=""):
+    def setArgs(self, args, msg=""):
         self.args = args
-        self.message = message
+        self.msg = msg
 
 
 class Application:

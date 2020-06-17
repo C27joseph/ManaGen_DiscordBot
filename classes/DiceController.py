@@ -1,5 +1,6 @@
 from library import handleExpression
 import random
+import discord
 
 
 class Dice:
@@ -61,6 +62,19 @@ class DiceController:
             message = message.replace(old, new)
         return message
 
+    def getEmbed(self, e, replaces=[]):
+        embed = discord.Embed(
+            title=self.getMessage(e['title'], replaces),
+            description=self.getMessage(e['description'], replaces),
+            color=1
+        )
+        for name, value, inline in e['fields']:
+            embed.add_field(
+                name=name,
+                value=self.getMessage(value, replaces),
+                inline=inline or True)
+        return embed
+
     async def g(self, context):
         nh, expression = self.getExpression(context.args)
         dice = self.roll(3, 6)
@@ -70,11 +84,17 @@ class DiceController:
             ("<#expression>", expression),
             ("<#nh>", str(nh)),
             ("<#gdice>", dice.message),
-            ("<#margin>", str(margin))
+            ("<#margin>", str(margin)),
+            ("<#result>", result.capitalize()),
+            ("<#message>", context.msg)
         ]
-        message = self.strings['g']['message']
+        message = self.strings['g'][result]['message']
         message = self.getMessage(message, replaces)
-        return await context.channel.send(message)
+        embed = None
+        if self.strings['g']['embed']:
+            embed = self.strings['g'][result]["embed"]
+            embed = self.getEmbed(embed, replaces)
+        return await context.channel.send(message, embed=embed)
 
     async def r(self, context):
         total, expression = self.getExpression(context.args)

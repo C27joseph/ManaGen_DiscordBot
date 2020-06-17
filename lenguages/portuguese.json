@@ -5,8 +5,55 @@
             "embed":""
         },
         "g":{
-            "message":"<#author> rolou `<#gdice>`, NH = <#nh>\n >><#margin><< Margem de Sucesso\n<#expression>",
-            "embed":""
+            "embed":true,
+            "decisive":{
+                "message":"<#author> rolou `<#gdice>`,\n ***>><#margin><<*** Margem de Sucesso\n",
+                "embed":{
+                    "title":"**Sucesso Decisivo!**",
+                    "description":"<#message>",
+                    "fields":[
+                        ["NH Final", "<#nh>", true],
+                        ["Expressão", "<#expression>", true]
+                    ],
+                    "reactions":[]
+                }
+            },
+            "critic":{
+                "message":"<#author> rolou `<#gdice>`,\n ***>><#margin><<*** Margem de Sucesso\n",
+                "embed":{
+                    "title":"**Falha Critica!**",
+                    "description":"<#message>",
+                    "fields":[
+                        ["NH Final", "<#nh>", true],
+                        ["Expressão", "<#expression>", true]
+                    ],
+                    "reactions":[]
+                }
+            },
+            "success":{
+                "message":"<#author> rolou `<#gdice>`,\n ***>><#margin><<*** Margem de Sucesso\n",
+                "embed":{
+                    "title":"**Sucesso Comum**",
+                    "description":"<#message>",
+                    "fields":[
+                        ["NH Final", "<#nh>", true],
+                        ["Expressão", "<#expression>", true]
+                    ],
+                    "reactions":[]
+                }
+            },
+            "fail":{
+                "message":"<#author> rolou `<#gdice>`,\n ***>><#margin><<*** Margem de Sucesso\n",
+                "embed":{
+                    "title":"**Falha Comum**",
+                    "description":"<#message>",
+                    "fields":[
+                        ["NH Final", "<#nh>", true],
+                        ["Expressão", "<#expression>", true]
+                    ]
+                },
+                "reactions":[]
+            }
         }
     }
 }
