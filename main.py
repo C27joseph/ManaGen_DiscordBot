@@ -33,7 +33,7 @@ class Application:
 
     def getGuild(self, key):
         if not existKey(key, self.guilds):
-            self.guilds[key] = Guild(key)
+            self.guilds[key] = Guild(key)   
         return self.guilds[key]
 
 

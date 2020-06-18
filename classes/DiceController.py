@@ -1,6 +1,7 @@
 from library import handleExpression
 import random
 import discord
+import re
 
 
 class Dice:
@@ -20,26 +21,25 @@ class DiceController:
         self.strings = self.guild.strings["DiceController"]
 
     def getExpression(self, args):
-        expression = handleExpression(args)
-        expression = expression.replace(" d", " 1d")
-        total_expression = []
-        args_message = []
-        for v in expression.split():
-            if v.find("d") != -1:
-                try:
-                    num_dices, num_faces = v.split("d")
-                    r = self.roll(int(num_dices), int(num_faces))
-                    total_expression.append(str(r.total))
-                    args_message.append(r.message)
-                except Exception:
-                    return False
-            else:
+        try:
+            expression = handleExpression(args)
+            pattern = re.compile(r"\d*d\d+")
+            total_expression = []
+            for v in expression.split():
+                dices = pattern.findall(repr(v))
+                for dice in dices:
+                    n_dices, n_faces = dice.split("d")
+                    if len(n_dices) <= 0:
+                        n_dices = 1
+                    r = self.roll(int(n_dices), int(n_faces))
+                    v = v.replace(dice, str(r.total))
+                    expression = expression.replace(dice, r.message)
                 total_expression.append(v)
-                args_message.append(v)
-        total = " ".join(total_expression)
-        total = eval(total)
-        args_message = " ".join(args_message)
-        return total, args_message
+            total = " ".join(total_expression)
+            total = eval(total)
+            return total, expression
+        except Exception:
+            return False
 
     def getGurpsInfo(self, nh, total):
         margin = nh - total
@@ -66,13 +66,15 @@ class DiceController:
         embed = discord.Embed(
             title=self.getMessage(e['title'], replaces),
             description=self.getMessage(e['description'], replaces),
-            color=1
+            color=e['color']
         )
-        for name, value, inline in e['fields']:
+        for field in e['fields']:
+            if len(field) <= 3:
+                field.append(True)
             embed.add_field(
-                name=name,
-                value=self.getMessage(value, replaces),
-                inline=inline or True)
+                name=field[0],
+                value=self.getMessage(field[1], replaces),
+                inline=field[2])
         return embed
 
     async def g(self, context):
@@ -94,7 +96,13 @@ class DiceController:
         if self.strings['g']['embed']:
             embed = self.strings['g'][result]["embed"]
             embed = self.getEmbed(embed, replaces)
-        return await context.channel.send(message, embed=embed)
+        ctx = await context.channel.send(message, embed=embed)
+        try:
+            for react in self.strings['g'][result]['reactions']:
+                await ctx.add_reaction(react)
+        except Exception:
+            pass
+        return ctx
 
     async def r(self, context):
         total, expression = self.getExpression(context.args)

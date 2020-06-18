@@ -1,4 +1,3 @@
 
-
-    def setArgs(self, args, msg=""):
-        self.args = args
+    context = Context(prefix, message, client)
+    gm = app.getGuild(gKey)
