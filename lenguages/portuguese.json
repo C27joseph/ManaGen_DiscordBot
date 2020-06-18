@@ -1,7 +1,11 @@
 {
     "DiceController":{
+        "error":{
+            "expression":"Informe os Argumentos Corretamente!"
+        },
+        "dice":"<#ndices>d<#nfaces>:<#dices> <#total>",
         "r":{
-            "message":"<#author> rolou <#expression>, Total = <#total>",
+            "message":"<#author> rolou <#expression>, Total >>*** <#total> ***<<",
             "embed":""
         },
         "g":{

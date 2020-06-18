@@ -17,50 +17,41 @@ class Context:
         self.msg = msg
 
 
-class Application:
+class Client(discord.Client):
     def __init__(self):
-        self.token = Json.loadWrite(pathfile='private/token.json')
-        self.server = "dev"
+        super().__init__()
+        self.tokens = Json.loadWrite(pathfile='private/token.json')
+        self.bot = "dev"
         self.version = "0.001"
         self.name = "ManaGens"
-        self.guilds = {}
+        self.guildManagers = {}
         self.prefixes = Json.loadWrite(pathfile='private/prefixes.json')
+        self.run(self.tokens[self.bot])
 
-    def getPrefix(self, key):
-        if not existKey(key, self.prefixes):
-            return '/'
-        return self.prefixes[key]
+    async def on_ready(self):
+        cur_time = getCurrentTime()
+        print(f"{self.name} [{self.bot}] - {self.version} init at {cur_time}")
+        for guild in self.guilds:
+            print(f"\t{guild.name}:{guild.id} connected")
 
-    def getGuild(self, key):
+    async def on_message(self, message):
+        if message.author == self.user:
+            return
+        if not message.guild:
+            return
+        gKey = str(message.guild.id)
+        gm, prefix = self.getGuildManager(gKey)
+        context = Context(prefix, message, self)
+        await gm.run(context)
+
+    def getGuildManager(self, key):
         if not existKey(key, self.guilds):
-            self.guilds[key] = Guild(key)   
-        return self.guilds[key]
+            self.guildManagers[key] = Guild(key)
+        if not existKey(key, self.prefixes):
+            prefix = '/'
+        else:
+            prefix = self.prefixes[key]
+        return self.guildManagers[key], prefix
 
 
-app = Application()
-
-
-client = discord.Client()
-
-
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
-    if not message.guild:
-        return
-    gKey = str(message.guild.id)
-    prefix = app.getPrefix(gKey)
-    context = Context(prefix, message, client)
-    gm = app.getGuild(gKey)
-    await gm.run(context)
-
-
-@client.event
-async def on_ready():
-    print(f"{app.name} init at {getCurrentTime()}")
-    for guild in client.guilds:
-        print(f"\t{guild.name}:{guild.id} connected")
-
-
-client.run(app.token[app.server])
+client = Client()

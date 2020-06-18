@@ -1,4 +1,3 @@
-from library import handleExpression
 import random
 import discord
 import re
@@ -22,22 +21,19 @@ class DiceController:
 
     def getExpression(self, args):
         try:
-            expression = handleExpression(args)
+            expression = " ".join(args)
+            total = expression
             pattern = re.compile(r"\d*d\d+")
-            total_expression = []
-            for v in expression.split():
-                dices = pattern.findall(repr(v))
-                for dice in dices:
-                    n_dices, n_faces = dice.split("d")
-                    if len(n_dices) <= 0:
-                        n_dices = 1
-                    r = self.roll(int(n_dices), int(n_faces))
-                    v = v.replace(dice, str(r.total))
-                    expression = expression.replace(dice, r.message)
-                total_expression.append(v)
-            total = " ".join(total_expression)
+            dices = pattern.findall(repr(expression))
+            for dice in dices:
+                n_dices, n_faces = dice.split("d")
+                if len(n_dices) <= 0:
+                    n_dices = 1
+                r = self.roll(int(n_dices), int(n_faces))
+                total = total.replace(dice, str(r.total))
+                expression = expression.replace(dice, r.message)
             total = eval(total)
-            return total, expression
+            return total, expression.replace("*", "\\*")
         except Exception:
             return False
 
@@ -78,7 +74,11 @@ class DiceController:
         return embed
 
     async def g(self, context):
-        nh, expression = self.getExpression(context.args)
+        try:
+            nh, expression = self.getExpression(context.args)
+        except Exception:
+            await context.author.send(self.strings["error"]["expression"])
+            return False
         dice = self.roll(3, 6)
         margin, result = self.getGurpsInfo(nh, dice.total)
         replaces = [
@@ -105,7 +105,11 @@ class DiceController:
         return ctx
 
     async def r(self, context):
-        total, expression = self.getExpression(context.args)
+        try:
+            total, expression = self.getExpression(context.args)
+        except Exception:
+            await context.author.send(self.strings["error"]["expression"])
+            return False
         replaces = [
             ("<#author>", context.author.mention),
             ("<#expression>", expression),
@@ -124,5 +128,13 @@ class DiceController:
             msg += str(v)+", "
             total += v
             dices.append(v)
-        msg = f"{num_dices}d{num_faces}: {total} "+msg[:-2]+"]"
-        return Dice(total, dices, msg)
+        msg = msg[: -2]+"]"
+        message = self.strings["dice"]
+        replaces = [
+            ("<#ndices>", str(num_dices)),
+            ("<#nfaces>", str(num_faces)),
+            ("<#dices>", msg),
+            ("<#total>", str(total))
+        ]
+        message = self.getMessage(message, replaces)
+        return Dice(total, dices, message)
