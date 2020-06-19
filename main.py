@@ -1,6 +1,6 @@
 import discord
 from library import Json, existKey, getCurrentTime
-from classes.Guild import Guild
+from classes.Guild import GuildManager
 
 
 class Context:
@@ -15,6 +15,9 @@ class Context:
     def setArgs(self, args, msg=""):
         self.args = args
         self.msg = msg
+
+    def setPlayer(self, player):
+        self.player = player
 
 
 class Client(discord.Client):
@@ -46,7 +49,7 @@ class Client(discord.Client):
 
     def getGuildManager(self, key):
         if not existKey(key, self.guilds):
-            self.guildManagers[key] = Guild(key)
+            self.guildManagers[key] = GuildManager(key)
         if not existKey(key, self.prefixes):
             prefix = '/'
         else:

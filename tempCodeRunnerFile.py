@@ -1,3 +1,2 @@
 
-    context = Context(prefix, message, client)
-    gm = app.getGuild(gKey)
+    async def on_ready(self):

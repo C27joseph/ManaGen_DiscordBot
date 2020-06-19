@@ -1,7 +1,12 @@
+
 /private
+
 /guilds
+
 /__pycache__
-*.gitignore
+
 *.mypy_cache
+
 /.vscode
-/classes/__pycache__/*
+
+
