@@ -23,7 +23,7 @@ def handleArgs(content):
             message += word+" "
         else:
             args.append(word)
-    return args, message.rstrip()
+    return args, message.rstrip()[1:]
 
 
 def getCurrentTime():

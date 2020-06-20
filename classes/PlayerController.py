@@ -14,8 +14,9 @@ class PlayerController(Database):
         self.guild = guild
         self.path = self.guild.path+"players/"
         self.players = PlayerList(pathfile=self.guild.path+"players.json")
+        self.users = {}
         self.commands = {
-            "addplayer":self.addPlayer
+            "add player": self.addPlayer
         }
 
     async def addPlayer(self, context):
@@ -28,9 +29,9 @@ class PlayerController(Database):
     def getPlayerManager(self, key):
         if not existKey(key, self.players):
             return None
-        if not existKey(key, self.playerManagers):
+        if not existKey(key, self.users):
             pKey = self.path+key
-            self.playerManagers[key] = PlayerManager(pKey)
+            self.users[key] = PlayerManager(pKey)
 
 
 class PlayerManager:

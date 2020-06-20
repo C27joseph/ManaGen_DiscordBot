@@ -1,9 +1,9 @@
 from classes.DiceController import DiceController
 from classes.ItemController import ItemController
+from classes.PlayerController import PlayerController
 from library import handleArgs
 from unidecode import unidecode
 from classes.Config import Strings
-from classes.Player import PlayerController
 
 
 class GuildManager:
@@ -15,9 +15,6 @@ class GuildManager:
         self.ic = ItemController(self)
         self.pc = PlayerController(self)
         self.playerManagers = {}
-        self.commands = {
-            "addplayer": self.addPlayer
-        }
 
     async def run(self, context):
         where = [self.dc, self.ic, self.pc]
@@ -25,11 +22,11 @@ class GuildManager:
             for command, function in place.commands.items():
                 cmd = str.lower(unidecode(context.prefix+command))
                 if context.message.content.startswith(cmd):
-                    args, message = handleArgs(
+                    args, msg = handleArgs(
                         context.message.content[len(cmd):])
                     pKey = str(context.author.id)
-                    player = self.getPlayerManager(pKey)
+                    player = self.pc.getPlayerManager(pKey)
                     if player:
                         context.setPlayer(player)
-                    context.setArgs(args, message)
+                    context.setArgs(args, msg)
                     return await function(context)
