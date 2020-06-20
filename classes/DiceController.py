@@ -13,11 +13,11 @@ class Dice:
 class DiceController:
     def __init__(self, guild):
         self.guild = guild
+        self.strings = self.guild.strings.dc
         self.commands = {
             "r": self.r,
             "g": self.g
         }
-        self.strings = self.guild.strings["DiceController"]
 
     def getExpression(self, args):
         try:

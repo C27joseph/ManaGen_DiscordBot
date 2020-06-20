@@ -41,16 +41,16 @@ def handleExpression(args):
 
 
 class Json:
-    def load(pathfile=""):
+    def load(pathfile="", encoding='utf-8'):
         try:
-            with open(pathfile, "r") as f:
+            with open(pathfile, "r", encoding=encoding) as f:
                 data = load(f)
                 return data
         except IOError:
             print(f"cannot load {pathfile}")
             return False
 
-    def loadWrite(pathfile="", default={}, encoding="utf-8"):
+    def loadWrite(pathfile="", default={}, encoding='utf-8'):
         try:
             with open(pathfile, "r", encoding=encoding) as f:
                 data = load(f)
@@ -63,7 +63,7 @@ class Json:
                     os.mkdir(cur_path)
                 except Exception:
                     pass
-            with open(pathfile, 'w') as f:
+            with open(pathfile, 'w', encoding=encoding) as f:
                 dump(default, f, indent=4, ensure_ascii=False)
                 return default
 
@@ -76,7 +76,7 @@ class Json:
                     os.mkdir(cur_path)
                 except Exception:
                     pass
-            with open(pathfile, 'w') as f:
+            with open(pathfile, 'w', encoding=encoding) as f:
                 dump(default, f, indent=4, ensure_ascii=False)
                 return True
         except IOError:

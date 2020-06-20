@@ -12,6 +12,9 @@ class Context:
         self.author = message.author
         self.client = client
 
+    def setStrings(self, strings):
+        self.strings = strings
+
     def setArgs(self, args, msg=""):
         self.args = args
         self.msg = msg

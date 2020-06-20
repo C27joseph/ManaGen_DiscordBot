@@ -1,0 +1,29 @@
+{
+    "colors":{
+        "common":16777214,
+        "incommun":2187678,
+        "rare":15582208,
+        "relic":7953338
+    },
+    "fields":{
+        "weight":"Peso",
+        "cost":"Preço",
+        "durability":"Durabilidade",
+        "waste":"Perda de Durabilidade",
+        "give":"Transferível",
+        "buy":"Comprável",
+        "sell":"Vendível",
+        "steal":"Roubável",
+        "drink":"Bebível",
+        "eat":"Comível",
+        "consume":"Consumível",
+        "use":"Usável",
+        "equip":"Equipável",
+        "invoke":"Invocável",
+        "craft":"Craftável",
+        "copy":"Copiável",
+        
+        "actions":"Ações",
+        "tags":"Categorias"
+    }
+}

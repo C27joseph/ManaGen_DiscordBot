@@ -2,30 +2,30 @@ from classes.Database import Database
 from json import loads
 from discord import Embed
 from unidecode import unidecode
-from string import capwords
 
 
 class Item(dict):
     def __init__(self, _dct={}, **kv):
         super().__init__(_dct, **kv)
-        
+
     async def send(self, context):
         meta = self['meta']
         data = self['data']
-        if meta['hide']:
-            return None
-        embed = Embed(title=meta["name"], description=meta['description'])
-        embed.set_image(url=meta["image-url"])
-        for name, value in data.items():
-            try:
-                if isinstance(value, list):
-                    value = capwords(", ".join(value))
-                if len(value) > 0:
-                    embed.add_field(name=name, value=value)
+        tags = ", ".join(self['tags'])
+        fields = context.strings["fields"]
+        color = context.strings['colors'][meta['rarity']]
+        print(color)
+        embed = Embed(title=meta["name"],
+                      description=meta['description'],
+                      color=color)
+        embed.add_field(name=fields['weight'], value=f"{meta['weight']}) Kg")
 
-            except Exception:
-                pass
-        await context.channel.send(context.author.mention, embed=embed)
+        for name, value in data:
+            embed.add_field(name=name, value=value)
+
+        embed.set_image(url=meta["image-url"])
+        embed.set_footer(text=fields["tags"]+": "+tags)
+        await context.channel.send(embed=embed)
 
 
 class ItemList(Database):
@@ -35,6 +35,16 @@ class ItemList(Database):
     def add(self, item):
         self.update(item)
         self.save()
+
+    def remove(self, name):
+        try:
+            name = str.lower(unidecode(name))
+            item = Item(self[name])
+            del self[name]
+            self.save()
+            return item
+        except Exception:
+            return None
 
     def get(self, name):
         try:
@@ -48,16 +58,25 @@ class ItemController:
     def __init__(self, guild):
         self.guild = guild
         self.items = ItemList(pathfile=self.guild.path+"items.json")
+        self.strings = self.guild.strings.ic
         self.commands = {
             "add item": self.addItem,
-            "show item": self.showItem
+            "show item": self.showItem,
+            "remove item": self.removeItem
         }
 
+    async def removeItem(self, context):
+        context.setStrings(self.strings)
+        item = self.items.remove(" ".join(context.args))
+        await item.send(context)
+
     async def addItem(self, context):
+        context.setStrings(self.strings)
         item = loads(context.msg, encoding="utf-8")
         name = str.lower(unidecode(item['meta']['name']))
         self.items.add({name: item})
 
     async def showItem(self, context):
+        context.setStrings(self.strings)
         item = self.items.get(" ".join(context.args))
         await item.send(context)

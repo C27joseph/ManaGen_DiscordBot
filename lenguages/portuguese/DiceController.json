@@ -1,0 +1,65 @@
+{
+    "error":{
+        "expression":"Informe os Argumentos Corretamente!"
+    },
+    "dice":"<#ndices>d<#nfaces>:<#dices> <#total>",
+    "r":{
+        "message":"<#author> rolou <#expression>, Total >>*** <#total> ***<<",
+        "embed":""
+    },
+    "g":{
+        "embed":true,
+        "decisive":{
+            "message":"<#author> rolou `<#gdice>`,\n ***>><#margin><<*** Margem de Sucesso\n",
+            "embed":{
+                "title":"**Sucesso Decisivo!**",
+                "description":"<#message>",
+                "color":16109122,
+                "fields":[
+                    ["NH Final", "<#nh>"],
+                    ["Expressão", "<#expression>"]
+                ]
+            },
+            "reactions":["✅", "⭐"]
+        },
+        "critic":{
+            "message":"<#author> rolou `<#gdice>`,\n ***>><#margin><<*** Margem de Sucesso\n",
+            "embed":{
+                "title":"**Falha Critica!**",
+                "description":"<#message>",
+                "color":0,
+                "fields":[
+                    ["NH Final", "<#nh>"],
+                    ["Expressão", "<#expression>"]
+                ]
+            },
+            "reactions":["❌", "💀"]
+        },
+        "success":{
+            "message":"<#author> rolou `<#gdice>`,\n ***>><#margin><<*** Margem de Sucesso\n",
+            "embed":{
+                "title":"**Sucesso Comum**",
+                "description":"<#message>",
+                "color":5504850,
+                "fields":[
+                    ["NH Final", "<#nh>"],
+                    ["Expressão", "<#expression>"]
+                ]
+            },
+            "reactions":["✅"]
+        },
+        "fail":{
+            "message":"<#author> rolou `<#gdice>`,\n ***>><#margin><<*** Margem de Sucesso\n",
+            "embed":{
+                "title":"**Falha Comum**",
+                "description":"<#message>",
+                "color":14360351,
+                "fields":[
+                    ["NH Final", "<#nh>"],
+                    ["Expressão", "<#expression>"]
+                ]
+            },
+            "reactions":["❌"]
+        }
+    }
+}

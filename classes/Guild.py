@@ -20,7 +20,7 @@ class GuildManager:
         where = [self.dc, self.ic, self.pc]
         for place in where:
             for command, function in place.commands.items():
-                cmd = str.lower(unidecode(context.prefix+command))
+                cmd = str.lower(unidecode(context.prefix+command+' '))
                 if context.message.content.startswith(cmd):
                     args, msg = handleArgs(
                         context.message.content[len(cmd):])

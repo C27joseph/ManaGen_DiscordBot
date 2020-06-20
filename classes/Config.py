@@ -1,6 +1,8 @@
-from classes.Database import Database
+from library import Json
 
 
-class Strings(Database):
+class Strings:
     def __init__(self, lenguage="portuguese"):
-        super().__init__(pathfile=f"lenguages/{lenguage}.json")
+        self.path = f"lenguages/{lenguage}/"
+        self.dc = Json.loadWrite(self.path+"DiceController.json")
+        self.ic = Json.loadWrite(self.path+"ItemController.json")

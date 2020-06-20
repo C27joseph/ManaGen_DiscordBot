@@ -1,3 +1,2 @@
 
-        if not existKey(key, self.guilds):
-            self.guildManagers[key] = GuildManager(key)
+        self.author = message.author
