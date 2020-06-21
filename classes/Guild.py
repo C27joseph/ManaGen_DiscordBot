@@ -24,9 +24,9 @@ class GuildManager:
                 if context.message.content.startswith(cmd):
                     args, msg = handleArgs(
                         context.message.content[len(cmd):])
-                    pKey = str(context.author.id)
-                    player = self.pc.getPlayerManager(pKey)
+                    player = self.pc.getPlayerManager(context.author)
                     if player:
                         context.setPlayer(player)
                     context.setArgs(args, msg)
+                    context.setStrings(place.strings)
                     return await function(context)

@@ -11,6 +11,7 @@ class Context:
         self.channel = message.channel
         self.author = message.author
         self.client = client
+        self.users = message.mentions
 
     def setStrings(self, strings):
         self.strings = strings

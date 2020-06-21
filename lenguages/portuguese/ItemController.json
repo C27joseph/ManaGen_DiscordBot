@@ -1,4 +1,8 @@
 {
+    "error":{
+        "item_not_found":"Item não encontrado!",
+        "player_not_found":"Player não encontrado!"
+    },
     "colors":{
         "common":16777214,
         "incommun":2187678,

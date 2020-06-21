@@ -4,7 +4,7 @@ from classes.player.Binds import Binds
 from library import existKey
 
 
-class PlayerList(Database):
+class AcceptedPlayers(Database):
     def __init__(self, **kv):
         super().__init__(**kv)
 
@@ -13,29 +13,33 @@ class PlayerController(Database):
     def __init__(self, guild):
         self.guild = guild
         self.path = self.guild.path+"players/"
-        self.players = PlayerList(pathfile=self.guild.path+"players.json")
-        self.users = {}
+        self.acceptedPlayers = AcceptedPlayers(
+            pathfile=self.guild.path+"acceptedPlayers.json")
+        self.players = {}
+        self.strings = self.guild.strings
         self.commands = {
             "add player": self.addPlayer
         }
 
     async def addPlayer(self, context):
-        # O ideal é aqui adicionar mais informações da criação do personagem, um acesso rápido a configurações dos players como elementos e outras questões, e é claro se o player esta ativo.
         user = context.message.mentions[0]
         pKey = str(user.id)
-        self.players[pKey] = True
-        self.players.save()
+        self.acceptedPlayers[pKey] = True
+        self.acceptedPlayers.save()
 
-    def getPlayerManager(self, key):
-        if not existKey(key, self.players):
+    def getPlayerManager(self, user):
+        key = str(user.id)
+        if not existKey(key, self.acceptedPlayers):
             return None
-        if not existKey(key, self.users):
-            pKey = self.path+key
-            self.users[key] = PlayerManager(pKey)
+        if not existKey(key, self.players):
+            self.players[key] = PlayerManager(self, key)
+        return self.players[key]
 
 
 class PlayerManager:
-    def __init__(self, key):
+    def __init__(self, controller, key):
         self.key = key
-        self.inventory = Inventory(key)
-        self.binds = Binds(key)
+        self.controller = controller
+        self.path = self.controller.path+key+"/"
+        self.inventory = Inventory(self.path)
+        self.binds = Binds(self.path)
