@@ -1,27 +1,7 @@
 import discord
 from library import Json, existKey, getCurrentTime
 from classes.Guild import GuildManager
-
-
-class Context:
-    def __init__(self, prefix, message, client):
-        self.prefix = prefix
-        self.message = message
-        self.guild = message.guild
-        self.channel = message.channel
-        self.author = message.author
-        self.client = client
-        self.users = message.mentions
-
-    def setStrings(self, strings):
-        self.strings = strings
-
-    def setArgs(self, args, msg=""):
-        self.args = args
-        self.msg = msg
-
-    def setPlayer(self, player):
-        self.player = player
+from context import Context
 
 
 class Client(discord.Client):

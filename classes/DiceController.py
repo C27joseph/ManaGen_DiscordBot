@@ -1,13 +1,14 @@
 import random
-import discord
 import re
 
 
 class Dice:
-    def __init__(self, total, dices, msg):
+    def __init__(self, total, dices, dlist, ndices, nfaces):
         self.total = total
         self.dices = dices
-        self.message = msg
+        self.dlist = dlist
+        self.ndices = ndices
+        self.nfaces = nfaces
 
 
 class DiceController:
@@ -15,8 +16,8 @@ class DiceController:
         self.guild = guild
         self.strings = self.guild.strings.dc
         self.commands = {
-            "r": self.r,
-            "g": self.g
+            "r ": self.r,
+            "g ": self.g
         }
 
     def getExpression(self, args):
@@ -31,7 +32,7 @@ class DiceController:
                     n_dices = 1
                 r = self.roll(int(n_dices), int(n_faces))
                 total = total.replace(dice, str(r.total))
-                expression = expression.replace(dice, r.message)
+                expression = expression.replace(dice, f"{dice}={r.total}")
             total = eval(total)
             return total, expression.replace("*", "\\*")
         except Exception:
@@ -53,56 +54,20 @@ class DiceController:
             result = "fail"
         return margin, result
 
-    def getMessage(self, message="", replaces=[]):
-        for old, new in replaces:
-            message = message.replace(old, new)
-        return message
-
-    def getEmbed(self, e, replaces=[]):
-        embed = discord.Embed(
-            title=self.getMessage(e['title'], replaces),
-            description=self.getMessage(e['description'], replaces),
-            color=e['color']
-        )
-        for field in e['fields']:
-            if len(field) <= 3:
-                field.append(True)
-            embed.add_field(
-                name=field[0],
-                value=self.getMessage(field[1], replaces),
-                inline=field[2])
-        return embed
-
     async def g(self, context):
         try:
             nh, expression = self.getExpression(context.args)
         except Exception:
-            await context.author.send(self.strings["error"]["expression"])
+            await context.sendPv(self.strings["error"]["expression"])
             return False
         dice = self.roll(3, 6)
         margin, result = self.getGurpsInfo(nh, dice.total)
-        replaces = [
-            ("<#author>", context.author.mention),
-            ("<#expression>", expression),
-            ("<#nh>", str(nh)),
-            ("<#gdice>", dice.message),
-            ("<#margin>", str(margin)),
-            ("<#result>", result.capitalize()),
-            ("<#message>", context.msg)
-        ]
-        message = self.strings['g'][result]['message']
-        message = self.getMessage(message, replaces)
-        embed = None
-        if self.strings['g']['embed']:
-            embed = self.strings['g'][result]["embed"]
-            embed = self.getEmbed(embed, replaces)
-        ctx = await context.channel.send(message, embed=embed)
-        try:
-            for react in self.strings['g'][result]['reactions']:
-                await ctx.add_reaction(react)
-        except Exception:
-            pass
-        return ctx
+        return await context.sendCh(
+            self.strings['g'][result], result=result,
+            nh=nh, expression=expression, margin=margin,
+            ndices=dice.ndices, nfaces=dice.nfaces,
+            total=dice.total, dlist=dice.dlist,
+        )
 
     async def r(self, context):
         try:
@@ -110,14 +75,9 @@ class DiceController:
         except Exception:
             await context.author.send(self.strings["error"]["expression"])
             return False
-        replaces = [
-            ("<#author>", context.author.mention),
-            ("<#expression>", expression),
-            ("<#total>", str(total))
-        ]
-        message = self.strings['r']['message']
-        message = self.getMessage(message, replaces)
-        return await context.channel.send(message)
+        await context.sendCh(
+            self.strings["r"],
+            total=total, expression=expression)
 
     def roll(self, num_dices, num_faces):
         dices = []
@@ -129,12 +89,4 @@ class DiceController:
             total += v
             dices.append(v)
         msg = msg[: -2]+"]"
-        message = self.strings["dice"]
-        replaces = [
-            ("<#ndices>", str(num_dices)),
-            ("<#nfaces>", str(num_faces)),
-            ("<#dices>", msg),
-            ("<#total>", str(total))
-        ]
-        message = self.getMessage(message, replaces)
-        return Dice(total, dices, message)
+        return Dice(total, dices, msg, num_dices, num_faces)

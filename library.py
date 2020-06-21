@@ -31,6 +31,11 @@ def getCurrentTime():
     return currentDT.strftime("date: %d/%m/%Y, %H:%M:%S")
 
 
+def getKey():
+    currentDT = datetime.datetime.now()
+    return currentDT.strftime("%d%H%M%S")
+
+
 def handleExpression(args):
     expression = " ".join(args)
     ops = ["/", "*", "+", "-"]

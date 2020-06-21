@@ -60,7 +60,7 @@ class ItemController:
         self.strings = self.guild.strings.ic
         self.commands = {
             "add item": self.add,
-            "show item": self.show,
+            "item": self.show,
             "remove item": self.remove,
             "give item": self.give
         }
@@ -68,13 +68,13 @@ class ItemController:
     async def give(self, context):
         item = self.items.get(context.args[0])
         if not item:
-            context.author.send(self.strings["error"]['item_not_found'])
+            await context.author.send(self.strings["error"]['item_not_found'])
             return False
         try:
             user = context.users[0]
             player = self.guild.pc.getPlayerManager(user)
         except Exception:
-            context.author.send(self.strings["error"]['player_not_found'])
+            await context.author.send(self.strings["error"]['player_not_found'])
             return False
         player.inventory.addItem(item)
         await item.send(context)
@@ -89,5 +89,10 @@ class ItemController:
         self.items.add({name: item})
 
     async def show(self, context):
-        item = self.items.get(" ".join(context.args))
-        await item.send(context)
+        try:
+            item = self.items.get(" ".join(context.args))
+            if not item:
+                item = Item(context.player.inventory[" ".join(context.args)])
+            await item.send(context)
+        except Exception:
+            await context.author.send(self.strings['error']['item_not_found'])

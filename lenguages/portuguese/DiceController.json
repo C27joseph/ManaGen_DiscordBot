@@ -1,16 +1,19 @@
 {
     "error":{
-        "expression":"Informe os Argumentos Corretamente!"
+        "expression":{
+            "content":"Informe os Argumentos Corretamente!",
+            "embed":{},
+            "reactions":[]
+        }
     },
-    "dice":"<#ndices>d<#nfaces>:<#dices> <#total>",
     "r":{
-        "message":"<#author> rolou <#expression>, Total >>*** <#total> ***<<",
-        "embed":""
+        "content":"<#author> rolou <#expression>, Total >>*** <#total> ***<<",
+        "embed":{},
+        "reactions":[]
     },
     "g":{
-        "embed":true,
         "decisive":{
-            "message":"<#author> rolou `<#gdice>`,\n ***>><#margin><<*** Margem de Sucesso\n",
+            "content":"<#author> rolou `<#ndices>d<#nfaces>:<#dlist> <#total>`,\n ***>><#margin><<*** Margem de Sucesso\n",
             "embed":{
                 "title":"**Sucesso Decisivo!**",
                 "description":"<#message>",
@@ -23,7 +26,7 @@
             "reactions":["✅", "⭐"]
         },
         "critic":{
-            "message":"<#author> rolou `<#gdice>`,\n ***>><#margin><<*** Margem de Sucesso\n",
+            "content":"<#author> rolou `<#ndices>d<#nfaces>:<#dlist> <#total>`,\n ***>><#margin><<*** Margem de Sucesso\n",
             "embed":{
                 "title":"**Falha Critica!**",
                 "description":"<#message>",
@@ -36,7 +39,7 @@
             "reactions":["❌", "💀"]
         },
         "success":{
-            "message":"<#author> rolou `<#gdice>`,\n ***>><#margin><<*** Margem de Sucesso\n",
+            "content":"<#author> rolou `<#ndices>d<#nfaces>:<#dlist> <#total>`,\n ***>><#margin><<*** Margem de Sucesso\n",
             "embed":{
                 "title":"**Sucesso Comum**",
                 "description":"<#message>",
@@ -49,7 +52,7 @@
             "reactions":["✅"]
         },
         "fail":{
-            "message":"<#author> rolou `<#gdice>`,\n ***>><#margin><<*** Margem de Sucesso\n",
+            "content":"<#author> rolou `<#ndices>d<#nfaces>:<#dlist> <#total>`,\n ***>><#margin><<*** Margem de Sucesso\n",
             "embed":{
                 "title":"**Falha Comum**",
                 "description":"<#message>",

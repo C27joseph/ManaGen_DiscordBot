@@ -5,7 +5,7 @@
     },
     "colors":{
         "common":16777214,
-        "incommun":2187678,
+        "uncommon":2187678,
         "rare":15582208,
         "relic":7953338
     },
@@ -26,7 +26,8 @@
         "invoke":"Invocável",
         "craft":"Craftável",
         "copy":"Copiável",
-        
+        "melee_atack":"Ataque Corpo-A-Corpo",
+        "throw":"Arremessar",
         "actions":"Ações",
         "tags":"Categorias"
     }

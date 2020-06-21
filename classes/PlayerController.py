@@ -18,8 +18,17 @@ class PlayerController(Database):
         self.players = {}
         self.strings = self.guild.strings
         self.commands = {
-            "add player": self.addPlayer
+            "add player": self.addPlayer,
+            "items": self.items
         }
+
+    async def items(self, context):
+        try:
+            # if is adm
+            user = self.getPlayerManager(context.users[0])
+        except Exception:
+            user = self.getPlayerManager(context.author)
+        await user.inventory.send(context)
 
     async def addPlayer(self, context):
         user = context.message.mentions[0]
@@ -41,5 +50,5 @@ class PlayerManager:
         self.key = key
         self.controller = controller
         self.path = self.controller.path+key+"/"
-        self.inventory = Inventory(self.path)
+        self.inventory = Inventory(self)
         self.binds = Binds(self.path)
